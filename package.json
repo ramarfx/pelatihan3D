@@ -1,5 +1,6 @@
 {
   "name": "pelatihan3d",
+  "type": "module",
   "version": "1.0.0",
   "description": "ada udang di balik batu",
   "main": "index.js",
