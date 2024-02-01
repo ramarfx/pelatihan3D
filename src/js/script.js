@@ -1,7 +1,7 @@
 // main library for WebGL
 import * as THREE from 'three'
-import { OrbitControls } from
-    'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import * as dat from 'dat.gui'
 
 
 // canvas
@@ -58,7 +58,6 @@ scene.add(sphere)
 // capsule.rotation.z = Math.PI / 2
 // scene.add( capsule );
 
-
 const axesHelper = new THREE.AxesHelper(5)
 scene.add(axesHelper)
 
@@ -81,6 +80,21 @@ const orbit = new OrbitControls(camera, canvas)
 // update posisi orbit
 orbit.update();
 
+const gui = new dat.GUI();
+const options = {
+    sphereColor: '#ff7f50',
+    wireframe: false,
+    speed: 0.01
+}
+
+gui.addColor(options, 'sphereColor').onChange((e) => {
+    sphere.material.color.set(e)
+})
+gui.add(options, 'wireframe').onChange((e) => {
+    sphere.material.wireframe = e
+})
+gui.add(options, 'speed', 0, 100)
+
 // render element
 let step = 0
 function animate(time) {
@@ -88,8 +102,8 @@ function animate(time) {
     box.rotation.y = time / 1000
     renderer.render(scene, camera)
 
-    step += 0.01
-    sphere.position.y = 10 * Math.abs(Math.sin(step))
+    step += options.speed
+    sphere.position.y = 10 * Math.abs(Math.cos(step))
 }
 
 renderer.setAnimationLoop(animate)
