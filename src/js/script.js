@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 //canvas
 const canvas = document.getElementById('canvas')
@@ -31,6 +32,11 @@ scene.add(axesHelper)
 //untuk menampilkan grid pada layar
 const gridHelper = new THREE.GridHelper(30)
 scene.add(gridHelper)
+
+const loader = new GLTFLoader();
+loader.load('../assets/monyet.glb', (gltf) => {
+  scene.add(gltf.scene)
+})
 
 //membuat kamera
 const camera = new THREE.PerspectiveCamera(
