@@ -1,11 +1,13 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+// main library for WebGL
+import * as THREE from 'three'
+import { OrbitControls } from
+    'three/examples/jsm/controls/OrbitControls'
 
-//canvas
+
+// canvas
 const canvas = document.getElementById('canvas')
 
-//renderer
+// renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
@@ -15,47 +17,79 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const scene = new THREE.Scene()
 
+// bentuk object geometry
+const boxGeometry = new THREE.BoxGeometry()
 
-//object dan material
-const boxGeometry = new THREE.BoxGeometry(10, 1, 10)
+// material untuk style pada object geometry
 const boxMaterial = new THREE.MeshBasicMaterial({
-    color: 0x00ff00,
+    color: 0x00FFFF
 })
 
-//menyatukan box elemen dengan material
+// mesh untuk menyatukan geometry dan material
 const box = new THREE.Mesh(boxGeometry, boxMaterial)
+box.position.setY(1);
 scene.add(box)
+
+//membuat dataran   
+const planeGeometry = new THREE.PlaneGeometry(30, 30)
+const planeMaterial = new THREE.MeshBasicMaterial({
+    color: 0xA979A9,
+    side: THREE.DoubleSide
+})
+const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+plane.rotation.x = Math.PI / 2
+scene.add(plane)
+
+
+//membuat bola bola ayam
+const sphereGeometry = new THREE.SphereGeometry(4, 50, 50)
+const sphereMaterial = new THREE.MeshBasicMaterial({
+    color: 0x0000ff
+})
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+sphere.position.set(-10, 5, 0)
+scene.add(sphere)
+
+// const geometry = new THREE.CapsuleGeometry( 2, 15, 4, 40 ); 
+// const material = new THREE.MeshBasicMaterial( {color: 0xffff} ); 
+// const capsule = new THREE.Mesh( geometry, material );
+// capsule.position.set(1, 5, 0)
+// capsule.rotation.x = Math.PI / 2
+// capsule.rotation.z = Math.PI / 2
+// scene.add( capsule );
+
 
 const axesHelper = new THREE.AxesHelper(5)
 scene.add(axesHelper)
 
-//untuk menampilkan grid pada layar
-const gridHelper = new THREE.GridHelper(30)
-scene.add(gridHelper)
+// untuk menampilkan grid helper
+// const gridHelper = new THREE.GridHelper(30)
+// scene.add(gridHelper)
 
-const loader = new GLTFLoader();
-loader.load('../assets/monyet.glb', (gltf) => {
-  scene.add(gltf.scene)
-})
-
-//membuat kamera
+// membuat perspektif kamera
 const camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
-    0.1,
+    0.5,
     1000,
 )
-camera.position.set(-10, 10, 30)
+camera.position.set(-10, 30, 30)
 
-//untuk orbit
+// untuk control secara orbit
 const orbit = new OrbitControls(camera, canvas)
 
-//update posisi orbit
+// update posisi orbit
 orbit.update();
 
-
-function animate() {
+// render element
+let step = 0
+function animate(time) {
+    box.rotation.x = time / 100
+    box.rotation.y = time / 1000
     renderer.render(scene, camera)
+
+    step += 0.01
+    sphere.position.y = 10 * Math.abs(Math.sin(step))
 }
 
 renderer.setAnimationLoop(animate)
